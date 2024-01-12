@@ -17,8 +17,12 @@ fileInput.addEventListener('change', handleFileSelect);
 function handleFileSelect(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files && input.files[0];
+  if (file == null) {
+    console.error('Invalid file format. Please select a WAV audio file.');
+    alert('Invalid file format. Please select a WAV audio file.');
+  } else if (file.type && file.type.startsWith('audio/wav')) {
+    ws.empty();
 
-  if (file) {
     // Use FileReader to read the file as an ArrayBuffer
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -30,7 +34,7 @@ function handleFileSelect(event: Event) {
         let wav = new WaveFile(uint8Array);
 
         // Now you can work with the 'wav' object as needed
-        //console.log(wav);
+        console.log(wav);
 
         // Convert the Uint8Array to a Blob
         const blob = new Blob([uint8Array], { type: 'audio/wav' });
@@ -45,6 +49,9 @@ function handleFileSelect(event: Event) {
 
     // Read the file as an ArrayBuffer
     reader.readAsArrayBuffer(file);
+  } else {
+    console.error('Invalid file format. Please select a WAV audio file.');
+    alert('Invalid file format. Please select a WAV audio file.');
   }
 }
 
