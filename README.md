@@ -18,3 +18,8 @@ pauses in speech, and records the timestamps of these pauses in milliseconds
 - The program should output a list of timestamps indicating the start and end of each pause.
 - This output can be printed to the console or written to a file, based on your preference.
 
+# Features:
+
+- User is able to upload audio files(supports μ-law encoded audio files).
+- User is able to see the visualization of the audio waves.
+- User is able to see in the console the timestamps pause detected(Contains both start and end time).
