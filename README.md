@@ -22,4 +22,4 @@ pauses in speech, and records the timestamps of these pauses in milliseconds
 
 - User is able to upload audio files(supports μ-law encoded audio files).
 - User is able to see the visualization of the audio waves.
-- User is able to see in the console the timestamps pause detected(Contains both start and end time).
+- User is able to see in the console the timestamps when the pauses are detected(Contains both start and end time).
