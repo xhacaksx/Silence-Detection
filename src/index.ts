@@ -69,6 +69,11 @@ const extractRegions = (audioData: Float32Array, duration: number) => {
   const silentRegions = [];
 
   // Find all silent regions longer than minSilenceDuration
+  // The function iterates through the audio data, identifying the start and end indices of silent regions based on the
+  // minValue threshold.
+  // When a silent region is detected, it checks if its duration (scaled to time) is greater than minSilenceDuration. If
+  // yes, it records the region in the silentRegions array.
+
   let start = 0;
   let end = 0;
   let isSilent = false;
@@ -91,6 +96,8 @@ const extractRegions = (audioData: Float32Array, duration: number) => {
   }
 
   // Merge silent regions that are close together
+  // The function then iterates through the detected silent regions and merges adjacent ones if the gap between them is
+  // smaller than mergeDuration. This step helps to avoid splitting long pauses into multiple shorter ones.
   const mergedRegions = [];
   let lastRegion = null;
   for (let i = 0; i < silentRegions.length; i++) {
