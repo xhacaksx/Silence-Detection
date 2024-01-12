@@ -1,11 +1,7 @@
 import WaveSurfer from 'wavesurfer.js';
 import { WaveFile } from 'wavefile';
-interface AudioProcessingSettings {
-  minValue: number;
-  minSilenceDuration: number;
-  mergeDuration: number;
-}
-// Specify the input element for file input
+
+//input element for file input
 const fileInput = document.getElementById('fileInput') as HTMLInputElement;
 
 // Create WaveSurfer instance
@@ -34,7 +30,7 @@ function handleFileSelect(event: Event) {
         let wav = new WaveFile(uint8Array);
 
         // Now you can work with the 'wav' object as needed
-        console.log(wav);
+        //console.log(wav);
 
         // Convert the Uint8Array to a Blob
         const blob = new Blob([uint8Array], { type: 'audio/wav' });
@@ -63,38 +59,12 @@ playBtn?.addEventListener('click', () => {
     playBtn?.classList.remove('playing');
   }
 });
-// const form = document.querySelector('#myForm') as HTMLFormElement;
-// form?.addEventListener('submit', processAudio);
-// function processAudio(event: Event) {
-//   event.preventDefault();
-//   const minValueInput = document.querySelector(
-//     '#minValueInput',
-//   ) as HTMLFormElement;
-//   //const minValue: number = minValueInput?.value;
-//   const minValue: number = parseFloat(minValueInput.value) || 0;
-//   const minSilenceDurationInput = document.querySelector(
-//     '#minSilenceDurationInput',
-//   ) as HTMLFormElement;
-//   //const minSilenceDuration = minSilenceDurationInput?.value;
-//   const minSilenceDuration: number =
-//     parseFloat(minSilenceDurationInput.value) || 0;
-//   const mergeDurationInput = document.querySelector(
-//     '#mergeDurationInput',
-//   ) as HTMLFormElement;
-//   //const mergeDuration = mergeDurationInput?.value;
-//   const mergeDuration: number = parseFloat(mergeDurationInput.value) || 0;
-//   console.log(`${minValue},${mergeDuration},${minSilenceDuration}`);
-// }
-const extractRegions = (
-  audioData: Float32Array,
-  duration: number,
-  // settings: AudioProcessingSettings,
-) => {
-  const minValue = 0.025;
-  const minSilenceDuration = 0.01;
-  const mergeDuration = 0.1;
 
-  //const { minValue, minSilenceDuration, mergeDuration } = settings;
+const extractRegions = (audioData: Float32Array, duration: number) => {
+  const minValue = 0.025; // Minimum amplitude threshold for silence detection
+  const minSilenceDuration = 0.01; // Minimum duration of silent regions
+  const mergeDuration = 0.1; // Maximum gap duration to merge adjacent silent regions
+
   const scale = duration / audioData.length;
   const silentRegions = [];
 
@@ -137,49 +107,15 @@ const extractRegions = (
 };
 
 function handleAudioDecoding(decodedData: AudioBuffer, duration: number) {
-  // Call your custom function to extract regions or process audio data
+  const timestamps = extractRegions(decodedData.getChannelData(0), duration);
 
-  // const settings: AudioProcessingSettings = {
-  //   minValue: parseFloat(
-  //     (<HTMLInputElement>document.querySelector('minValueInput')).value,
-  //   ),
-  //   minSilenceDuration: parseFloat(
-  //     (<HTMLInputElement>document.querySelector('minSilenceDurationInput'))
-  //       .value,
-  //   ),
-  //   mergeDuration: parseFloat(
-  //     (<HTMLInputElement>document.querySelector('mergeDurationInput')).value,
-  //   ),
-  // };
-
-  const timestamps = extractRegions(
-    decodedData.getChannelData(0),
-    duration,
-    //settings,
-  );
-
-  // Log timestamps to console (you can store or use them as needed)
+  // Log timestamps to console
   console.log('Silent Region Timestamps:', timestamps);
 }
 // Create regions for each non-silent part of the audio
 ws.on('decode', (duration) => {
   const decodedData = ws.getDecodedData();
   if (decodedData) {
-    //const timestamps = extractRegions(decodedData.getChannelData(0), duration);
-    //processAudio(decodedData, duration);
     handleAudioDecoding(decodedData, duration);
-    // Log timestamps to console (you can store or use them as needed)
-    //console.log('Silent Region Timestamps:', timestamps);
-
-    // Add regions to the waveform
-    // timestamps.forEach((timestamp, index) => {
-    //   wsRegions.addRegion({
-    //     start: timestamp.start,
-    //     end: timestamp.end,
-    //     content: index.toString(),
-    //     drag: false,
-    //     resize: false,
-    //   });
-    // });
   }
 });
