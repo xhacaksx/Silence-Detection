@@ -17,7 +17,7 @@ fileInput.addEventListener('change', handleFileSelect);
 function handleFileSelect(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files && input.files[0];
-  if (file == null) {
+  if (file === null) {
     console.error('Invalid file format. Please select a WAV audio file.');
     alert('Invalid file format. Please select a WAV audio file.');
   } else if (file.type && file.type.startsWith('audio/wav')) {
@@ -49,23 +49,22 @@ function handleFileSelect(event: Event) {
 
     // Read the file as an ArrayBuffer
     reader.readAsArrayBuffer(file);
+    const playBtn = document.querySelector('.play-btn');
+
+    playBtn?.addEventListener('click', () => {
+      ws.playPause();
+
+      if (ws.isPlaying()) {
+        playBtn?.classList.add('playing');
+      } else {
+        playBtn?.classList.remove('playing');
+      }
+    });
   } else {
     console.error('Invalid file format. Please select a WAV audio file.');
     alert('Invalid file format. Please select a WAV audio file.');
   }
 }
-
-const playBtn = document.querySelector('.play-btn');
-
-playBtn?.addEventListener('click', () => {
-  ws.playPause();
-
-  if (ws.isPlaying()) {
-    playBtn?.classList.add('playing');
-  } else {
-    playBtn?.classList.remove('playing');
-  }
-});
 
 const extractRegions = (audioData: Float32Array, duration: number) => {
   const minValue = 0.025; // Minimum amplitude threshold for silence detection
