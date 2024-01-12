@@ -1,24 +1,20 @@
-# New Project
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+# Objective:
 
-## Available Scripts
+Develop an application that processes a μ-law (mulaw) encoded audio file, identifies
+pauses in speech, and records the timestamps of these pauses in milliseconds
 
-### npm start
+# Task Description:
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+1. Read a μ-law Encoded Audio File:
+- Your application should be able to read an input file that is encoded in the μ-law format
+2. Process Audio Data:
+- Implement an algorithm to process the audio stream and detect pauses in speech.
+- A pause in speech can be defined as a continuous segment of audio below a certainamplitude threshold. You can define a reasonable threshold based on the audio characteristics.
+3. Timestamp Recording:
+- Record the timestamps of these pauses in a human-readable format.
+- Timestamps should be precise to the millisecond (e.g., a pause from 1,950 ms to 2,100 ms).
+4. Output:
+- The program should output a list of timestamps indicating the start and end of each pause.
+- This output can be printed to the console or written to a file, based on your preference.
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
-
-### npm run build
-
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
-
-**For the best production performance:** Add a build bundler plugin like [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/main/plugins/plugin-webpack) or [snowpack-plugin-rollup-bundle](https://github.com/ParamagicDev/snowpack-plugin-rollup-bundle) to your `snowpack.config.mjs` config file.
-
-### Q: What about Eject?
-
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
