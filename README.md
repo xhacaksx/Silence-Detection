@@ -40,3 +40,10 @@ cd Silence-Detection
 npm install
 npm start
 ```
+
+## Dependencies
+
+List of npm packages used in this project:
+
+- **[WaveSurfer.js](https://www.npmjs.com/package/wavesurfer.js):** A JavaScript library for creating interactive audio waveforms.
+- **[WaveFile](https://www.npmjs.com/package/wavefile):** A library for working with WAV audio files.
