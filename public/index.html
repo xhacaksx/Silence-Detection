@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mu-law</title>
+    <title>Audio Silence Detector</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -18,20 +18,179 @@
     <script>
       var exports = {};
     </script>
-    <!--Audio Container  -->
 
-    <div class="audio-container">
-      <input type="file" id="fileInput" />
-      <div class="audio"></div>
+    <div class="container">
+      <div class="header">
+        <h1>Audio Silence Detector</h1>
+        <button id="theme-toggle" class="theme-toggle">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
 
-      <!-- button for play and pause -->
-      <div class="buttons">
-        <span class="play-btn btn">
-          <i class="fas fa-play"></i>
-          <i class="fas fa-pause"></i>
-        </span>
+      <div class="upload-section">
+        <div class="file-upload">
+          <label for="fileInput" class="file-upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Choose an audio file</span>
+          </label>
+          <input
+            type="file"
+            id="fileInput"
+            accept="audio/wav,audio/mpeg,audio/ogg,audio/aac,audio/mp4"
+            class="file-input"
+          />
+        </div>
+        <div class="format-info">
+          Supported formats: WAV, MP3, OGG, AAC, MP4 Audio
+        </div>
+      </div>
+
+      <div class="audio-section">
+        <div class="audio-container">
+          <div id="loading-spinner" class="loading-spinner hidden">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading audio...</span>
+          </div>
+          <div class="waveform-container">
+            <div class="zoom-controls">
+              <button id="zoom-out" class="zoom-btn" title="Zoom Out">
+                <i class="fas fa-search-minus"></i>
+              </button>
+              <button id="zoom-in" class="zoom-btn" title="Zoom In">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+            <div class="audio"></div>
+          </div>
+          <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+          </div>
+          <div class="time-display">
+            <span id="current-time">00:00.000</span>
+            <span>/</span>
+            <span id="total-time">00:00.000</span>
+          </div>
+          <div class="controls">
+            <button class="control-btn" id="rewind" title="Rewind 10s">
+              <i class="fas fa-backward"></i>
+            </button>
+            <button class="play-btn btn" title="Play/Pause">
+              <i class="fas fa-play"></i>
+              <i class="fas fa-pause"></i>
+            </button>
+            <button class="control-btn" id="forward" title="Forward 10s">
+              <i class="fas fa-forward"></i>
+            </button>
+          </div>
+          <div class="volume-control">
+            <button class="volume-btn" title="Toggle Mute">
+              <i class="fas fa-volume-up"></i>
+            </button>
+            <input
+              type="range"
+              class="volume-slider"
+              min="0"
+              max="100"
+              value="100"
+              title="Volume"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <div class="results-header">
+          <h2>Silence Detection Results</h2>
+          <button
+            id="download-results"
+            class="download-btn"
+            title="Download Results"
+          >
+            <i class="fas fa-download"></i>
+            Download Results
+          </button>
+        </div>
+        <div class="settings-panel">
+          <div class="setting">
+            <label for="threshold">Silence Threshold:</label>
+            <input
+              type="range"
+              id="threshold"
+              min="0"
+              max="100"
+              value="2.5"
+              step="0.1"
+            />
+            <span id="threshold-value">0.025</span>
+          </div>
+          <div class="setting">
+            <label for="min-silence">Minimum Silence Duration (s):</label>
+            <input
+              type="range"
+              id="min-silence"
+              min="0"
+              max="1"
+              value="0.01"
+              step="0.01"
+            />
+            <span id="min-silence-value">0.01</span>
+          </div>
+          <div class="setting">
+            <label for="merge-threshold">Merge Threshold (s):</label>
+            <input
+              type="range"
+              id="merge-threshold"
+              min="0"
+              max="1"
+              value="0.1"
+              step="0.01"
+            />
+            <span id="merge-threshold-value">0.1</span>
+          </div>
+        </div>
+        <div class="timestamps-container">
+          <div id="timestamps-list" class="timestamps-list">
+            <div class="no-results">
+              Upload an audio file to detect silent regions
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="keyboard-shortcuts-modal" id="shortcuts-modal">
+      <div class="modal-content">
+        <h3>Keyboard Shortcuts</h3>
+        <div class="shortcuts-list">
+          <div class="shortcut">
+            <span class="key">Space</span>
+            <span class="description">Play/Pause</span>
+          </div>
+          <div class="shortcut">
+            <span class="key">←</span>
+            <span class="description">Rewind 10s</span>
+          </div>
+          <div class="shortcut">
+            <span class="key">→</span>
+            <span class="description">Forward 10s</span>
+          </div>
+          <div class="shortcut">
+            <span class="key">M</span>
+            <span class="description">Mute/Unmute</span>
+          </div>
+          <div class="shortcut">
+            <span class="key">D</span>
+            <span class="description">Toggle Dark Mode</span>
+          </div>
+        </div>
+        <button class="close-modal">Close</button>
+      </div>
+    </div>
+
+    <button class="help-btn" id="show-shortcuts" title="Keyboard Shortcuts">
+      <i class="fas fa-keyboard"></i>
+    </button>
 
     <script type="module" src="./dist/index.js"></script>
   </body>
